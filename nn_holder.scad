@@ -27,7 +27,10 @@ module half(){
     }
 }
 
-// todo:
-// - place for a reset switch on the back
-// - connect all the parts and make sure it actually works
-// - measure actual room needed for battery and wires
+// todo2
+// - [ ] bottom plate
+// - [ ] screw countersinks
+// - [ ] front plate
+// - [ ] mcu side holder
+// - [ ] mcu backstop block
+// - [ ] 
