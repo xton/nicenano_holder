@@ -39,12 +39,12 @@ floor_d = 3.5;
 
 // reset switch
 
-rs_w = 3.5;
-rs_l = 6;
+rs_w = 3.5 +tol;
+rs_l = 6 +tol;
 rs_d = 3.5;
 rs_inset_d = 1.5;
 rs_inset = 3;
-rs_leg_d = 1.0; // leg hole diameter
+rs_leg_d = 1.5; // leg hole diameter
 
 
 // todo2
@@ -105,7 +105,7 @@ module countersink() {
     #cylinder(h=floor_d,r1=screw_r,r2=countersink_r);
 }
 
-rs_origin = [0,0 - bp_padding_bottom, floor_d];
+rs_origin = [nn_w-rs_l-wall,0 - bp_padding_bottom, floor_d];
 
 module truncated_pyramid(sides,outset) {
     // from example: https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron
@@ -135,7 +135,8 @@ module rs_hollow() {
     #translate(rs_origin) translate([0,0,0-rs_d - rs_inset_d]) {
         cube([rs_l,rs_w,rs_d + rs_inset_d]);
         translate([0,0,rs_d]) truncated_pyramid([rs_l, rs_w, rs_inset_d], rs_inset);
-        translate([rs_leg_d/2, rs_w/2, 0]) cylinder(d=rs_leg_d, h=wall, center=true);
+        translate([rs_leg_d/2, rs_w/2, 0-floor_d]) cylinder(d=rs_leg_d, h=floor_d);
+        translate([rs_l-rs_leg_d/2, rs_w/2, 0-floor_d]) cylinder(d=rs_leg_d, h=floor_d);
     }
 }
 
