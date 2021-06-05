@@ -22,8 +22,8 @@ padding_top = 1.0;
 padding_bottom = 2.0;
 
 // backstop
-backstop_screw_r = 3.2/2;
-backstop_screw_head_r = 7.65/2;
+backstop_screw_r = 3.2/2 + 2*tol;
+backstop_screw_head_r = 7.65/2 + tol;
 lead_width = 3.0;
 
 // front plate
@@ -32,15 +32,15 @@ cable_port_d = 1.0;
 
 // bottom plate
 skirt = 11.0;
-bp_padding_bottom = 20.0;
+bp_padding_bottom = 20.0 - wall; // oops. bad measurement. adjusting...
 bp_left_shaft = 40.0;
 bp_left_shaft_w = 10;
 floor_d = 3.5;
 
 // reset switch
 
-rs_w = 3.5 +tol;
-rs_l = 6 +tol;
+rs_w = 3.5 + 2*tol;
+rs_l = 6 + 2*tol;
 rs_d = 3.5;
 rs_inset_d = 1.5;
 rs_inset = 3;
@@ -91,13 +91,23 @@ module backstop() {
     }
 }
 
+module support(side) {
+    rotate([0,90,0]) linear_extrude(wall-tol) polygon(points=[
+        [0,0], [0,-side],[-side,0]
+    ]);
+}
+
 module front_plate() {
-    translate([-1*wall, nn_l, 0]) difference(){
-        cube([nn_w + 2*wall, wall, box_height+wall*2]);
-        # translate([nn_usb_d/2 + wall + (nn_w - nn_usb_w) / 2,  0, nn_usb_d/2 + padding_bottom]) rotate([90,0,0]) mirror([0,0,1]) linear_extrude(wall+tol) hull() {
-            circle(d=nn_usb_d+2*(tol+cable_port_d));
-            translate([nn_usb_w-nn_usb_d,0]) circle(d=nn_usb_d+2*(tol+cable_port_d));
+    translate([-1*wall, nn_l, 0]) union() {
+        difference(){
+            cube([nn_w + 2*wall, wall, box_height+wall*2]);
+            # translate([nn_usb_d/2 + wall + (nn_w - nn_usb_w) / 2,  0, nn_usb_d/2 + padding_bottom]) rotate([90,0,0]) mirror([0,0,1]) linear_extrude(wall+tol) hull() {
+                circle(d=nn_usb_d+2*(tol+cable_port_d));
+                translate([nn_usb_w-nn_usb_d,0]) circle(d=nn_usb_d+2*(tol+cable_port_d));
+            }
         }
+        support(box_height+wall);
+        translate([nn_w+wall+tol,0,0]) support(box_height+wall);
     }
 }
 
@@ -105,7 +115,6 @@ module countersink() {
     #cylinder(h=floor_d,r1=screw_r,r2=countersink_r);
 }
 
-rs_origin = [nn_w-rs_l-wall,0 - bp_padding_bottom, floor_d];
 
 module truncated_pyramid(sides,outset) {
     // from example: https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron
@@ -131,8 +140,10 @@ module truncated_pyramid(sides,outset) {
 }
 
 
+rs_origin = [0-rs_w,0-bp_padding_bottom+bp_left_shaft_w+wall-rs_l, floor_d];
+
 module rs_hollow() {
-    #translate(rs_origin) translate([0,0,0-rs_d - rs_inset_d]) {
+    #translate(rs_origin) rotate([0,0,90]) translate([0,0,0-rs_d - rs_inset_d]) {
         cube([rs_l,rs_w,rs_d + rs_inset_d]);
         translate([0,0,rs_d]) truncated_pyramid([rs_l, rs_w, rs_inset_d], rs_inset);
         translate([rs_leg_d/2, rs_w/2, 0-floor_d]) cylinder(d=rs_leg_d, h=floor_d);
@@ -141,7 +152,7 @@ module rs_hollow() {
 }
 
 module rs_hull() {
-    translate(rs_origin) mirror([0,0,1]) translate([0-wall, 0-wall, 0]){
+    translate(rs_origin) rotate([0,0,90]) mirror([0,0,1]) translate([0-wall, 0-wall, 0]){
         cube([rs_l+2*wall,rs_w+2*wall,wall+rs_d + rs_inset_d]);
     }
 
@@ -165,9 +176,9 @@ module bottom_plate() {
         translate([skirt/-2-wall,nn_l-skirt/2,0]) countersink();
         translate([skirt/2+nn_w+wall,nn_l-skirt/2,0]) countersink();
         translate([skirt/2+nn_w+wall,0- bp_padding_bottom- skirt/2,0]) countersink();
-        translate([0-bp_left_shaft+skirt/2,0- bp_padding_bottom- skirt/2,0]) countersink();
-        translate([0-bp_left_shaft+skirt/2,0-bp_padding_bottom+bp_left_shaft_w+skirt/2,0]) countersink();
-        translate([0-wall-skirt/2,0-bp_padding_bottom+bp_left_shaft_w+skirt/2,0]) countersink();
+        // translate([0-bp_left_shaft+skirt/2,0- bp_padding_bottom- skirt/2,0]) countersink();
+        // translate([0-bp_left_shaft+skirt/2,0-bp_padding_bottom+bp_left_shaft_w+skirt/2,0]) countersink();
+        translate([0-wall-skirt/2,0- bp_padding_bottom- skirt/2,0]) countersink();
 
         // extend the backstop hole a bit more
         translate([0,-2*backstop_screw_head_r])
@@ -189,3 +200,11 @@ holder();
 backstop();
 front_plate();
 bottom_plate();
+
+
+// todo: 
+// - [ ] supports on side of frontplate
+// - [ ] tighter holder
+// - [ ] redesign backstop
+// - [x] move rest switch box
+
