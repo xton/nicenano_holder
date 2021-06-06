@@ -22,13 +22,14 @@ padding_top = 1.0;
 padding_bottom = 2.0;
 
 // backstop
-backstop_screw_r = 3.2/2 + 2*tol;
-backstop_screw_head_r = 7.65/2 + tol;
-lead_width = 3.0;
+// backstop_screw_r = 3.2/2 + 2*tol;
+// backstop_screw_head_r = 7.65/2 + tol;
+bs_w = 3.0;
+bs_l = 2.0;
 
 // front plate
 box_height = 10.0;
-cable_port_d = 1.0;
+cable_port_d = 0.3;
 
 // bottom plate
 skirt = 11.0;
@@ -62,13 +63,14 @@ module holder_side(){
     rotate([90,0,0]) mirror([0,0,1]){
     linear_extrude(height=nn_l){
         polygon(points=[
-            [0-wall,0],
-            [0-wall,padding_top + padding_bottom + nn_d],
-            [holder_inset,padding_top + padding_bottom + nn_d],
-            [holder_inset, holder_inset + padding_bottom + nn_d + tol],
-            [-1*tol, padding_bottom + nn_d + tol],
-            [-1*tol, padding_bottom - tol],
-            [holder_inset, padding_bottom - holder_inset - tol],
+            [0-wall,0], // origin
+            [0-wall,padding_top + padding_bottom + nn_d], // top left
+            [holder_inset,padding_top + padding_bottom + nn_d], // top right
+
+            [holder_inset,  padding_bottom + nn_d],
+            [-1*tol/2, padding_bottom + nn_d],
+            [-1*tol/2, padding_bottom],
+            [holder_inset, padding_bottom],
             [holder_inset, 0]
         ]);
     };
@@ -79,15 +81,6 @@ module holder() {
     holder_side();
     translate([nn_w,0,0]) mirror([1, 0, 0]) {
         holder_side();
-    }
-}
-
-module backstop() {
-    translate([0,-2*backstop_screw_head_r])
-    difference() {
-        translate([lead_width,0,0]) cube([nn_w - 2*lead_width, 2*backstop_screw_head_r,padding_bottom]);
-        translate([nn_w/2,backstop_screw_head_r,0])
-            cylinder(h=padding_bottom,r=backstop_screw_r);
     }
 }
 
@@ -110,6 +103,22 @@ module front_plate() {
         translate([nn_w+wall+tol,0,0]) support(box_height+wall);
     }
 }
+
+
+module backstop() {
+    translate([0,-wall]) union() {
+        translate([nn_w/2 - bs_w/2,-bs_l,0]) cube([bs_w, bs_l,padding_bottom-tol]);
+        translate([-wall,-tol/2,0]) support(padding_top + padding_bottom + nn_d);
+        translate([nn_w+wall+tol/2,0,0]) translate([-wall,-tol,0]) support(padding_top + padding_bottom + nn_d);
+    }
+
+    // separate bar to lock things in place
+    translate([nn_w+wall+skirt*2, 0, -floor_d]) {
+        cube([padding_top + padding_bottom + nn_d, nn_w+wall*2, wall]);
+        
+    }
+}
+
 
 module countersink() {
     #cylinder(h=floor_d,r1=screw_r,r2=countersink_r);
@@ -180,12 +189,6 @@ module bottom_plate() {
         // translate([0-bp_left_shaft+skirt/2,0-bp_padding_bottom+bp_left_shaft_w+skirt/2,0]) countersink();
         translate([0-wall-skirt/2,0- bp_padding_bottom- skirt/2,0]) countersink();
 
-        // extend the backstop hole a bit more
-        translate([0,-2*backstop_screw_head_r])
-            translate([nn_w/2,backstop_screw_head_r,0]) {
-                cylinder(h=floor_d-1,r=backstop_screw_r);
-            }
-
         rs_hollow();
     }
         
@@ -203,8 +206,8 @@ bottom_plate();
 
 
 // todo: 
-// - [ ] supports on side of frontplate
-// - [ ] tighter holder
-// - [ ] redesign backstop
+// - [x] supports on side of frontplate
+// - [x] tighter holder
+// - [s] redesign backstop
 // - [x] move rest switch box
 
