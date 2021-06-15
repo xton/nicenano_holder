@@ -1,11 +1,11 @@
 # Plank Planck Wireless Mod
 
 
-A while ago I made a keyboard case for a Planck ortholinear mechanicalkeyboard out of a old redwood plank (a plank Planck!) with a big flat area for mousing. Good for couch gaming. Kind of like a home brew Razer Turret. Worked pretty well but very long USB cables only go so far.
+A while ago I made a keyboard case for a [Planck](https://olkb.com/collections/planck) out of a old redwood plank (a plank Planck!) with a big flat area for mousing. Good for couch gaming. Kind of like a home brew Razer Turret. Worked pretty well but very long USB cables only go so far.
 
-Recently, the #zmk project and cheap tiny microcontrollers with onboard Bluetooth like the #nicenano are making custom wireless keyboards more accessible.
+Recently, the [ZMK](https://zmk.dev/) project and cheap tiny microcontrollers with onboard Bluetooth like the [nice!nano](https://nicekeyboards.com/nice-nano/) are making custom wireless keyboards more accessible.
 
-Now, the Plank has its MCU soldered in buuut it exposes handy contacts for the matrix. So! Some creative rewiring, some sharp chisels, a router plane, a custom 3D printed cover, and a bunch of hours where other people were holding the baby, and I’ve got myself a wireless ortholinear couch gaming keyboard.
+Now, the Plank has its MCU soldered in, buuut it exposes handy contacts for the matrix. So! Some creative rewiring, some sharp chisels, a router plane, a custom 3D printed cover, and a bunch of hours where other people were holding the baby, and I’ve got myself a wireless ortholinear couch gaming keyboard.
 
 # This Repo...
 
@@ -21,8 +21,6 @@ Has the model for the 3d printed cover/mcu mount. Enjoy! Woodworking, wiring, an
 6. Slide the wired-up MCU into the rails in the case. The USB C port should align with the hole. Lock the MCU in place by sliding the extra 3d printed slab in behind it. 
 7. Solder the reset leads to the reset switch.
 8. Screw everything together and enjoy!
-
-Slide the wired 
 
 # Gallery
 
