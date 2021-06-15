@@ -18,14 +18,23 @@ Has the model for the 3d printed cover/mcu mount. Enjoy! Woodworking, wiring, an
 3. Trim some standard outdoor wood screws so they won't penetrate the top of the case (or, y'know, get the proper screws, but I had a ton of these!). Drill the appropriate pilot holes in your case.
 4. Thread the mcu and wire bundle through the front of the case so it dangles out the back. 
 5. Push a tactile switch in to the small hollow in the case so the legs penetrate the two holes (you may need to adjust the dimensions of this for the switches you have on hand).
-6. Slide the wired-up MCU into the rails in the case 
+6. Slide the wired-up MCU into the rails in the case. The USB C port should align with the hole. Lock the MCU in place by sliding the extra 3d printed slab in behind it. 
+7. Solder the reset leads to the reset switch.
+8. Screw everything together and enjoy!
 
 Slide the wired 
 
 # Gallery
 
 ![complete](img/complete.jpg)
-
+![wires](img/wires.jpg)
+![mcu](img/mcu.jpg)
+![mcu with case](img/mcu-side.jpg)
+![hole](img/hole.jpg)
+![cover](img/cover.jpg)
+![screws](img/screws.jpg)
+![assembled](img/side-bottom.jpg)
+![assembled 2](img/side-top.jpg)
 
 
 
